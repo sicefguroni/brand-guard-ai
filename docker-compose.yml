@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # 1. The Vector Database
+  qdrant_db:
+    image: qdrant/qdrant:latest
+    container_name: qdrant_db
+    ports:
+      - "6333:6333"
+    volumes:
+      - ./qdrant_data:/qdrant/storage
+
+  # 2. BrandGuard AI App
+  backend_api:
+    build: .
+    container_name: brand_guard_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      - QDRANT_URL=qdrant_db
+    depends_on:
+      - qdrant_db
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
