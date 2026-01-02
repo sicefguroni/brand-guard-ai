@@ -7,7 +7,7 @@ def init_safety():
     profanity.load_censor_words()
     profanity.add_censor_words(BANNED_WORDS)
 
-def validate_context(txt: str):
+def validate_content(txt: str):
     """
     Returns True if the text is safe, False otherwise.
     """

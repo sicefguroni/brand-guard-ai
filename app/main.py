@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from app.services.safety import init_safety, validate_context
+from app.services.safety import init_safety, validate_content
 from app.services.vector_db import initialize_db, upsert_brand_rule, search_brand_rules
 from app.services.generator import generate_social_post
 
@@ -45,25 +45,39 @@ def add_knowledge(data: BrandRule):
 
 @app.post("/generate-post")
 def create_post(request: PostRequest):
-    """
-    The Full RAG Pipeline:
-    1. Search DB for relevant rules.
-    2. Send rules + topic to LLM.
-    3. Return the safe, on-brand post.
-    """
-    try: 
-        # Step 1: Retrieval (R)
-        # We search for rules related to the topic AND the platform
+    try:
+        # --- NEW: INPUT GUARDRAIL ---
+        # Check if the USER'S topic contains banned words
+        is_topic_safe, topic_msg = validate_content(request.topic)
+        if not is_topic_safe:
+             return {
+                "status": "blocked",
+                "reason": f"Topic violation: {topic_msg}",
+                "generated_content": "[REDACTED]"
+            }
+        # ---------------------------
+
+        # 1. Retrieval
         query = f"{request.topic} style for {request.platform}"
         relevant_rules = search_brand_rules(query)
         
-        # Step 2: Generation (G)
+        # 2. Generation
         generated_content = generate_social_post(
             topic=request.topic,
             platform=request.platform,
             context_rules=relevant_rules
         )
         
+        # 3. OUTPUT GUARDRAIL (Keep this too!)
+        is_safe, message = validate_content(generated_content)
+        
+        if not is_safe:
+            return {
+                "status": "blocked",
+                "reason": message,
+                "generated_content": "[REDACTED]" 
+            }
+
         return {
             "status": "success",
             "post": generated_content,
