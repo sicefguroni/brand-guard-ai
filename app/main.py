@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from app.services.vector_db import initialize_db, upsert_brand_rule
+from app.services.safety import init_safety, validate_context
 
 # LIFESPAN: This is the modern way to run startup code in FastAPI
 # It runs ONE TIME when the server starts.
@@ -10,6 +11,7 @@ from contextlib import asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Connect to DB and create table
     initialize_db()
+    init_safety() # Load banned words into profanity filter
     yield
     # Shutdown: (Cleanup code would go here if needed)
 
