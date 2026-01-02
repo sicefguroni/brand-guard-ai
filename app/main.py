@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from app.services.safety import init_safety, validate_content
 from app.services.vector_db import initialize_db, upsert_brand_rule, search_brand_rules
 from app.services.generator import generate_social_post
+from app.services.cache import get_cached_post, save_to_cache
 
 # LIFESPAN: This is the modern way to run startup code in FastAPI
 # It runs ONE TIME when the server starts.
@@ -56,6 +57,14 @@ def create_post(request: PostRequest):
                 "generated_content": "[REDACTED]"
             }
         # ---------------------------
+        cached_result = get_cached_post(request.topic, request.platform)
+        if cached_result:
+            return {
+                "status": "success",
+                "post": cached_result['post'],
+                "context_used": cached_result['context_used'],
+                "meta": "Served from Cache ⚡" # Just to show off speed
+            }
 
         # 1. Retrieval
         query = f"{request.topic} style for {request.platform}"
@@ -70,13 +79,16 @@ def create_post(request: PostRequest):
         
         # 3. OUTPUT GUARDRAIL (Keep this too!)
         is_safe, message = validate_content(generated_content)
-        
+
         if not is_safe:
             return {
                 "status": "blocked",
                 "reason": message,
                 "generated_content": "[REDACTED]" 
             }
+
+         # 4. Save to Cache
+        save_to_cache(request.topic, request.platform, generated_content, relevant_rules)
 
         return {
             "status": "success",
