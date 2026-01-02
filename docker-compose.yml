@@ -10,6 +10,12 @@ services:
     volumes:
       - ./qdrant_data:/qdrant/storage
 
+  cache: 
+    image: redis:alpine
+    container_name: brand_guard_cache
+    ports:
+      - "6379:6379"
+
   # 2. BrandGuard AI App
   backend_api:
     build: .
@@ -22,8 +28,10 @@ services:
       - .env
     environment:
       - QDRANT_URL=qdrant_db
+      - REDIS_HOST=cache
     depends_on:
       - qdrant_db
+      - cache
     dns:
       - 8.8.8.8
       - 8.8.4.4
