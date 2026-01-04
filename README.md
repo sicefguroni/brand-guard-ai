@@ -3,6 +3,8 @@
 > An industry-grade RAG pipeline that enforces brand voice, safety protocols, and low-latency generation using Google Gemini, Qdrant, and Redis.
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 ## 📖 Overview
 
