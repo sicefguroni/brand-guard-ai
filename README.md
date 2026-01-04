@@ -1,4 +1,4 @@
-# BrandGuard AI: Intelligenete Social Engine
+# BrandGuard AI: Intelligent Social Engine
 
 > An industry-grade RAG pipeline that enforces brand voice, safety protocols, and low-latency generation using Google Gemini, Qdrant, and Redis.
 
