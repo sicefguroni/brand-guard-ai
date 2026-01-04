@@ -6,7 +6,7 @@
 
 ## 📖 Overview
 
-BrandGuard AI is not just a text generator, it is a compliant content orchestration engine. It bridges the gap between raw LLM capabilities and strict corporate brand guidelines.
+BrandGuard AI is not just a text generator, it is a **compliant content orchestration engine**. It bridges the gap between raw LLM capabilities and strict corporate brand guidelines.
 
 Users send topic requests via the REST API, which are processed by a Dual-Layer Guardrail System. The system retrieves specific brand rules from a Vector Database (Qdrant), generates content using Google Gemini 1.5 Flash, and validates safety protocols before caching the result in Redis for sub-20ms retrieval.
 
@@ -41,11 +41,11 @@ graph TD
 - Safety: Custom Input/Output Interceptors + `better-profanity`
 
 ## 🚀 Features
-- Retrieval Augmented Generation (RAG): Dynamically injects brand-specific tone and formatting rules based on the platform (LinkedIn vs. Twitter).
-- Dual-Layer Safety: Blocks toxic inputs instantly and scans final outputs for brand compliance before serving.
-- Smart Caching: Implements Redis to cache identical requests, reducing API costs and creating sub-20ms response times.
-- Microservices Infrastructure: Decoupled architecture where the API, Database, and Cache run in isolated, scalable containers.
-- Vector Ingestion: Specialized pipeline to convert raw text rules into high-dimensional vector embeddings.
+- **Retrieval Augmented Generation (RAG):** Dynamically injects brand-specific tone and formatting rules based on the platform (LinkedIn vs. Twitter).
+- **Dual-Layer Safety:** Blocks toxic inputs instantly and scans final outputs for brand compliance before serving.
+- **Smart Caching:** Implements Redis to cache identical requests, reducing API costs and creating sub-20ms response times.
+- **Microservices Infrastructure:** Decoupled architecture where the API, Database, and Cache run in isolated, scalable containers.
+- **Vector Ingestion:** Specialized pipeline to convert raw text rules into high-dimensional vector embeddings.
 
 ## 🛠️ Getting Started
 **Prerequisites**
